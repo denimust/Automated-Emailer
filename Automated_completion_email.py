@@ -6,6 +6,7 @@ import easygui
 root = Tk()
 root.filename = filedialog.askopenfilename(initialdir = "default path",title = "Select file",filetypes = (("csv files","*.csv"),("all files","*.*")))
 
+#Opening the data set and making lists from the columns that will be used.
 data= pandas.read_csv(str(root.filename))
 
 wo = list(data["WORKORDER_ID"])
@@ -31,7 +32,7 @@ charge_type = list(data["INVOICETYPE"])
 
 
 
-
+#The function that I use to have Outlook open a new email window with the needed information.
 def Emailer(text1, subject, recipient, recipient2, cc, bcc):
     import win32com.client as win32
 
@@ -44,6 +45,8 @@ def Emailer(text1, subject, recipient, recipient2, cc, bcc):
     mail.HtmlBody = text1
     mail.Display(False)
 
+#Variable for yesterday's date or completion date. I modified it to enter the date myself as date of completion wasn't always the day
+#prior
 yesterday_date= easygui.enterbox("Enter date of completion")
 
 
@@ -53,7 +56,7 @@ yesterday_date= easygui.enterbox("Enter date of completion")
 
 
 
-
+#Loop for the email that will be made. Body of text can be altered here. chrg_tp determines if the work was warranty related or not.
 for chrg_tp,w, tp, ml, nm, bldg, c, c2, alt_w, ml2 in zip(charge_type,wo, type, email, name,building, cc, cc2, alt_wo, email2):
     if chrg_tp == "EXTERNAL CHARGE":
         Emailer("""<p>Good Morning {0} and {1}!
